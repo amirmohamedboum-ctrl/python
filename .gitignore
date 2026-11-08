@@ -8,3 +8,6 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Logs de l'application (régénérés à chaque exécution)
+logs/

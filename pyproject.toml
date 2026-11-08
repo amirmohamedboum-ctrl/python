@@ -1,11 +1,10 @@
 [project]
 name = "logs-analysis"
 version = "0.1.0"
-description = "Add your description here"
+description = "Pipeline d'analyse des logs d'authentification SSH (auth.log)"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.12"
 dependencies = [
-    "matplotlib>=3.11.2",
-    "psycopg2-binary>=2.9.13",
-    "requests>=2.34.2",
+    "matplotlib>=3.8",
+    "requests>=2.31",
 ]

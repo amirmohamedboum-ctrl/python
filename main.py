@@ -1,12 +1,23 @@
 from pathlib import Path
+
+from utils.logger import get_logger
 from ingestion import read
-from processing import extract_transform
 
 DATA_DIR = Path(__file__).parent / "data"
+logger = get_logger("main")
+
+
+def main():
+    logger.info("Démarrage du pipeline")
+    rows = read.ingest(DATA_DIR)
+    if not rows:
+        logger.error("Aucune ligne lue : arrêt du pipeline")
+        return
+    print(f"{len(rows)} lignes lues")
+
 
 if __name__ == "__main__":
-    rows = read.ingest(str(DATA_DIR))
-    failed = extract_transform.filter_failed(rows)
-    print(f"{len(failed)} lignes Failed/Invalid sur {len(rows)} lignes")
-    for row in failed[:3]:
-        print(row.strip())
+    try:
+        main()
+    except Exception:
+        logger.exception("Erreur inattendue dans le pipeline")

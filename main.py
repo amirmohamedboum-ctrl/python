@@ -1,9 +1,11 @@
+
 from pathlib import Path
 
 from utils.logger import get_logger
 from ingestion import read
 from processing import extract_transform, geolocation, analysis
 from dashboard import dashboard
+from storage import database
 
 BASE_DIR = Path(__file__).parent
 DATA_DIR = BASE_DIR / "data"
@@ -26,7 +28,7 @@ def main():
         logger.error("Aucun événement extrait : arrêt du pipeline")
         return
 
-    # 3. Géolocalisation des IP à l'origine des échecs
+    # 3. Géolocalisation
     failed_ips = {e["ip"] for e in events if e["status"] == "failed"}
     countries = geolocation.resolve_countries(failed_ips)
 
@@ -35,8 +37,18 @@ def main():
     by_user = analysis.success_by_user(events)
     invalid_users = analysis.failed_invalid_user(events)
 
-    # 5. Dashboard
-    dashboard.build_dashboard(by_country, by_user, invalid_users, str(OUTPUT_FILE))
+    # 5. Enregistrement PostgreSQL
+    database.save_events(events, countries)
+    logger.info("Événements enregistrés dans PostgreSQL")
+
+    # 6. Dashboard
+    dashboard.build_dashboard(
+        by_country,
+        by_user,
+        invalid_users,
+        str(OUTPUT_FILE)
+    )
+
     logger.info("Pipeline terminé")
 
 

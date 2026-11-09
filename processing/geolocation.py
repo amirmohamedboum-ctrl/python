@@ -17,7 +17,7 @@ from utils.logger import get_logger
 
 logger = get_logger("geolocation")
 
-API_URL = "https://ipinfo.io/{ip}/json"
+API_URL = "https://ipinfo.io/{ip}/json/?token=1c3733ad8e7859"
 CACHE_FILE = Path(__file__).parent.parent / "cache" / "geo_cache.json"
 TIMEOUT = 5                  # secondes
 MAX_CONSECUTIVE_ERRORS = 5   # on arrête l'API après 5 erreurs de suite
